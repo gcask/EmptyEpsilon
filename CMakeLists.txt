@@ -437,18 +437,11 @@ if(WIN32)
   if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")
     file(DOWNLOAD "https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip" "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" TIMEOUT 60 TLS_VERIFY ON)
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
-    if(NOT MSVC)
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     	# Discord uses Windows.h (capital W) and that does not play nice when cross-compiling.
-	# So assume that if we're *not* using msvc, we want to patch a lowercase windows.h
+	# we want to patch a lowercase windows.h
 	message(STATUS "Patching discord_game._sdk.h, using a lowercase Windows.h (cross-compilation compatibility)")
-	set(_DISCORD_GAME_SDK_H "${CMAKE_CURRENT_BINARY_DIR}/discord/c/discord_game._sdk.h")
-	file(READ "${_DISCORD_GAME_SDK_H}" _DISCORD_GAME_SDK_H_CONTENT)
-	string(REPLACE "<Windows.h>" "<windows.h>" _DISCORD_GAME_SDK_H_CONTENT_PATCHED "${_DISCORD_GAME_SDK_H_CONTENT}")
-	file(WRITE "${_DISCORD_GAME_SDK_H}" "${_DISCORD_GAME_SDK_H_CONTENT_PATCHED}")
-	# Tidy up.
-	unset(_DISCORD_GAME_SDK_H_CONTENT_PATCHED)
-	unset(_DISCORD_GAME_SDK_H_CONTENT)
-	unset(_DISCORD_GAME_SDK_H)
+	execute_process(COMMAND sed -i y/<Windows.h>/<windows.h>/g c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
     endif()
   endif()
   target_link_libraries(${EXECUTABLE_NAME} "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")

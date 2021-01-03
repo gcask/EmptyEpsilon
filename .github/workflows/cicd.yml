@@ -91,7 +91,7 @@ jobs:
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: Configure CMake
         working-directory: ${{runner.workspace}}/build
-        run: cmake $env:GITHUB_WORKSPACE -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DSFML_ROOT="$env:GITHUB_WORKSPACE/externals/SFML-2.5.1"
+        run: cmake $env:GITHUB_WORKSPACE/EmptyEpsilon -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DSFML_ROOT="$env:GITHUB_WORKSPACE/externals/SFML-2.5.1"
       - name: Build
         working-directory: ${{runner.workspace}}/build
         # Execute the build.  You can specify a specific target with "--target <NAME>"

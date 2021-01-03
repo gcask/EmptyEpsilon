@@ -1,8 +1,12 @@
 #include "packResourceProvider.h"
 
 #include <cstdio>
+
 #ifdef _WIN32
 #include <malloc.h>
+#endif
+
+#ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else
@@ -69,7 +73,7 @@ std::vector<string> PackResourceProvider::findResources(const string searchPatte
 
 void PackResourceProvider::addPackResourcesForDirectory(const string directory)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     WIN32_FIND_DATAA data;
     auto search_root = directory;
     if (!search_root.endswith("/"))

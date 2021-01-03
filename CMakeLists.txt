@@ -388,7 +388,7 @@ target_compile_definitions(${EXECUTABLE_NAME}
     PUBLIC
     # SFML 2.5 gives deprication warnings on a few functions we use. But we maintain 2.3 compatibility, so ignore those warnings.
     SFML_NO_DEPRECATED_WARNINGS
-    $<$<BUILD_TYPE:Debug>:DEBUG>
+    $<$<CONFIG:Debug>:DEBUG>
     $<$<BOOL:${MSVC}>:NOMINMAX>
 
     # Set RESOURCE_BASE_DIR on Unix so the built binary is able to find resources

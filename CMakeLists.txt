@@ -441,7 +441,7 @@ if(WIN32)
     	# Discord uses Windows.h (capital W) and that does not play nice when cross-compiling.
 	# we want to patch a lowercase windows.h
 	message(STATUS "Patching discord_game._sdk.h, using a lowercase Windows.h (cross-compilation compatibility)")
-	execute_process(COMMAND sed -i y/<Windows.h>/<windows.h>/g c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
+	execute_process(COMMAND sed -i s/<Windows.h>/<windows.h>/g c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
     endif()
   endif()
   target_link_libraries(${EXECUTABLE_NAME} "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")

@@ -4,6 +4,8 @@
 
 #ifdef _WIN32
 #include <malloc.h>
+#else
+#include <alloca.h>
 #endif
 
 #ifdef _MSC_VER
@@ -11,7 +13,6 @@
 #include <windows.h>
 #else
 #include <dirent.h>
-#include <alloca.h>
 #endif
 
 static inline int readInt(FILE* f)

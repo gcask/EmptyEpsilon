@@ -442,7 +442,7 @@ if(WIN32)
 	# we want to patch a lowercase windows.h
 	message(STATUS "Patching discord_game._sdk.h, using a lowercase Windows.h (cross-compilation compatibility)")
 	add_custom_target(patch_discord_header COMMAND sed -i "s/<Windows.h>/<windows.h>/g" c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
-    	add_dependency(${EXECUTABLE_NAME} patch_discord_header)
+    	add_dependencies(${EXECUTABLE_NAME} patch_discord_header)
     endif()
   endif()
   target_link_libraries(${EXECUTABLE_NAME} "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")

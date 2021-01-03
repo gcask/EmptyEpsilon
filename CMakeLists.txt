@@ -437,13 +437,13 @@ if(WIN32)
   if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")
     file(DOWNLOAD "https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip" "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" TIMEOUT 60 TLS_VERIFY ON)
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
-    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-    	# Discord uses Windows.h (capital W) and that does not play nice when cross-compiling.
-	# we want to patch a lowercase windows.h
-	message(STATUS "Patching discord_game._sdk.h, using a lowercase Windows.h (cross-compilation compatibility)")
-	add_custom_target(patch_discord_header COMMAND sed -i "s/<Windows.h>/<windows.h>/g" c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord" VERBATIM)
-    	add_dependencies(${EXECUTABLE_NAME} patch_discord_header)
-    endif()
+  endif()
+  if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    # Discord uses Windows.h (capital W) and that does not play nice when cross-compiling.
+    # we want to patch a lowercase windows.h
+    message(STATUS "Patching discord_game._sdk.h, using a lowercase Windows.h (cross-compilation compatibility)")
+    add_custom_target(patch_discord_header COMMAND sed -i "s/<Windows.h>/<windows.h>/g" c/discord_game._sdk.h WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord" VERBATIM)
+    add_dependencies(${EXECUTABLE_NAME} patch_discord_header)
   endif()
   target_link_libraries(${EXECUTABLE_NAME} "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")
   target_include_directories(${EXECUTABLE_NAME} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/discord/c/")

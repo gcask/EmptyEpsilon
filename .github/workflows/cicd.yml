@@ -73,18 +73,18 @@ jobs:
       - name: Dependencies
         run: |
           $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-32-bit.zip”
-          $sfml_zip = “$env:GITHUB_WORKSPACE/sfml-dev.zip”
+          $sfml_zip = "${{runner.workspace}}/sfml-dev.zip"
           (new-object System.Net.WebClient).DownloadFile($sfml_link, $sfml_zip)
-          Expand-Archive -LiteralPath $sfml_zip -DestinationPath "$env:GITHUB_WORKSPACE/externals"
+          Expand-Archive -LiteralPath $sfml_zip -DestinationPath "${{runner.workspace}}/externals"
       - name: EmptyEpsilon Checkout
         uses: actions/checkout@v2
         with:
-          path: EmptyEpsilon
+          path: ${{runner.workspace}}/EmptyEpsilon
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:
           repository: daid/SeriousProton
-          path: SeriousProton
+          path: ${{runner.workspace}}/SeriousProton
       - name: Create Build Environment
         # Some projects don't allow in-source building, so create a separate build directory
         # We'll use this as our working directory for all subsequent commands

@@ -41,4 +41,27 @@ jobs:
           cd _build_win32
           cmake ../EmptyEpsilon -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../EmptyEpsilon/cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../SeriousProton
           ninja package
+    macos:
+      name: MacOS
+      runs-on: macos-11.0
+      steps:
+        - name: Dependencies
+          run: brew install cmake sfml ninja
+        - name: SeriousProton
+          uses: actions/checkout@v2
+          with:
+            repository: daid/SeriousProton
+            path: SeriousProton  
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            path: EmptyEpsilon
+        - name: Build
+          run: |
+            mkdir -p _build_macos
+            cd _build_macos
+            cmake ../EmptyEpsilon -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton
+            ninja
+            ninja install
+        
         

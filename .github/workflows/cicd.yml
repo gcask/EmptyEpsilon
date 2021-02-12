@@ -76,7 +76,7 @@ jobs:
     steps:
       - name: Dependencies
         run: |
-          $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-32-bit.zip”
+          $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-${{ matrix.arch == 'Win32' && '32' || 64 }}-bit.zip”
           $sfml_zip = "${{github.workspace}}/sfml-dev.zip"
           (new-object System.Net.WebClient).DownloadFile($sfml_link, $sfml_zip)
           Expand-Archive -LiteralPath $sfml_zip -DestinationPath "${{github.workspace}}/externals"

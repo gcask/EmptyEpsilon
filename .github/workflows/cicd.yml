@@ -34,6 +34,7 @@ jobs:
       run: >
         cmake
         -G Ninja
+        -DCMAKE_INSTALL_PREFIX=dist
         -DCPACK_GENERATOR=ZIP
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DSERIOUS_PROTON_DIR="../SeriousProton"
@@ -73,6 +74,7 @@ jobs:
           cmake
           -G Ninja
           -DCPACK_GENERATOR=ZIP
+          -DCMAKE_TOOLCHAIN_FILE=../EmptyEpsilon/cmake/mingw.toolchain
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DSERIOUS_PROTON_DIR="../SeriousProton"
           ../EmptyEpsilon
@@ -115,11 +117,7 @@ jobs:
           ../EmptyEpsilon
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config ${{ matrix.build_type }} --target package
-      - uses: actions/upload-artifact@v2
-        with:
-          name: emptyepsilon-${{matrix.build_type }}.app
-          path: ${{ github.workspace }}/build/EmptyEpsilon.app
+        run: cmake --build . --config ${{ matrix.build_type }} --target EmptyEpsilon
   windows:
     name: Windows
     runs-on: windows-latest
@@ -130,7 +128,7 @@ jobs:
     steps:
       - name: Dependencies
         run: |
-          $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-${{ matrix.arch == 'Win32' && '32' || 64 }}-bit.zip”
+          $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-${{ matrix.arch == 'Win32' && '32' || '64' }}-bit.zip”
           $sfml_zip = "${{github.workspace}}/sfml-dev.zip"
           (new-object System.Net.WebClient).DownloadFile($sfml_link, $sfml_zip)
           Expand-Archive -LiteralPath $sfml_zip -DestinationPath "${{github.workspace}}/externals"

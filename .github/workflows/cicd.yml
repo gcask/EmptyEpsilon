@@ -10,15 +10,40 @@ jobs:
   linux:
     name: Linux
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug, RelWithDebInfo, Release]
     steps:
     - name: Update apt index
       run: sudo apt-get update -qq
-    - name: Install SFML
-      run: sudo apt-get install libsfml-dev
-    - name: Checkout EmptyEpsilon
+    - name: Install dependencies 
+      run: sudo apt-get install build-essential cmake ninja-build zip unzip libsfml-dev
+    - name: SeriousProton Checkout
       uses: actions/checkout@v2
-    - name: Build and test
-      run: docker/build.sh
+      with:
+        repository: gcask/SeriousProton
+        path: SeriousProton  
+    - name: EmptyEpsilon Checkout
+      uses: actions/checkout@v2
+      with:
+        path: EmptyEpsilon
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/build
+      run: >
+        cmake
+        -G Ninja
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DSERIOUS_PROTON_DIR="../SeriousProton"
+        ../EmptyEpsilon
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build . --config ${{ matrix.build_type }} --target package
+    - uses: actions/upload-artifact@v2
+      with:
+        name: emptyepsilon-win-${{ matrix.arch }}-${{matrix.build_type }}.deb
+        path: ${{ github.workspace }}/build/EmptyEpsilon.deb
   windows-cross:
     name: Windows (Cross-Compile)
     runs-on: ubuntu-latest
@@ -30,7 +55,7 @@ jobs:
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:
-          repository: daid/SeriousProton
+          repository: gcask/SeriousProton
           path: SeriousProton  
       - name: EmptyEpsilon Checkout
         uses: actions/checkout@v2
@@ -65,7 +90,7 @@ jobs:
         run: |
           mkdir -p _build_macos
           cd _build_macos
-          cmake ../EmptyEpsilon -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton
+          cmake -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton -DCPACK_GENERATOR=Bundle ../EmptyEpsilon 
           ninja package
   windows:
     name: Windows

@@ -34,6 +34,7 @@ jobs:
       run: >
         cmake
         -G Ninja
+        -DCPACK_GENERATOR=ZIP
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DSERIOUS_PROTON_DIR="../SeriousProton"
         ../EmptyEpsilon
@@ -42,11 +43,14 @@ jobs:
       run: cmake --build . --config ${{ matrix.build_type }} --target package
     - uses: actions/upload-artifact@v2
       with:
-        name: emptyepsilon-win-${{ matrix.arch }}-${{matrix.build_type }}.deb
-        path: ${{ github.workspace }}/build/EmptyEpsilon.deb
+        name: emptyepsilon-linux-${{matrix.build_type }}.zip
+        path: ${{ github.workspace }}/build/EmptyEpsilon.zip
   windows-cross:
     name: Windows (Cross-Compile)
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug, RelWithDebInfo, Release]
     steps:
       - name: Dependencies
         run: |
@@ -61,37 +65,61 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: EmptyEpsilon
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: >
+          cmake
+          -G Ninja
+          -DCPACK_GENERATOR=ZIP
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DSERIOUS_PROTON_DIR="../SeriousProton"
+          ../EmptyEpsilon
       - name: Build
-        run: |
-          mkdir -p _build_win32
-          cd _build_win32
-          cmake ../EmptyEpsilon -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../EmptyEpsilon/cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../SeriousProton
-          ninja package
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config ${{ matrix.build_type }} --target package
       - uses: actions/upload-artifact@v2
         with:
-          name: emptyepsilon-mingw.zip
-          path: ${{ github.workspace }}/_build_win32/EmptyEpsilon.zip
+          name: emptyepsilon-mingw-${{matrix.build_type }}.zip
+          path: ${{ github.workspace }}/build/EmptyEpsilon.zip
   macos:
     name: MacOS
     runs-on: macos-latest
+    strategy:
+      matrix:
+        build_type: [Debug, RelWithDebInfo, Release]
     steps:
       - name: Dependencies
         run: brew install cmake sfml ninja
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:
-          repository: daid/SeriousProton
+          repository: gcask/SeriousProton
           path: SeriousProton  
       - name: EmptyEpsilon Checkout
         uses: actions/checkout@v2
         with:
           path: EmptyEpsilon
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: >
+          cmake
+          -G Ninja
+          -DCPACK_GENERATOR=Bundle
+          -DCPACK_BUNDLE_NAME=EmptyEpsilon
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DSERIOUS_PROTON_DIR="../SeriousProton"
+          ../EmptyEpsilon
       - name: Build
-        run: |
-          mkdir -p _build_macos
-          cd _build_macos
-          cmake -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton -DCPACK_GENERATOR=Bundle ../EmptyEpsilon 
-          ninja package
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config ${{ matrix.build_type }} --target package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: emptyepsilon-${{matrix.build_type }}.app
+          path: ${{ github.workspace }}/build/EmptyEpsilon.app
   windows:
     name: Windows
     runs-on: windows-latest

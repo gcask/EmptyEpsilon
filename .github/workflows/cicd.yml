@@ -14,10 +14,10 @@ jobs:
       matrix:
         build_type: [Debug, RelWithDebInfo, Release]
     steps:
-    - name: Update apt index
-      run: sudo apt-get update -qq
-    - name: Install dependencies 
-      run: sudo apt-get install build-essential cmake ninja-build zip unzip libsfml-dev
+    - name: Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install build-essential cmake ninja-build zip unzip libsfml-dev 
     - name: SeriousProton Checkout
       uses: actions/checkout@v2
       with:
@@ -28,13 +28,13 @@ jobs:
       with:
         path: EmptyEpsilon
     - name: Create Build Environment
-      run: cmake -E make_directory ${{github.workspace}}/build ${{github.workspace}}/dist
+      run: cmake -E make_directory ${{github.workspace}}/build
     - name: Configure CMake
       working-directory: ${{github.workspace}}/build
       run: >
         cmake
         -G Ninja
-        -DCMAKE_INSTALL_PREFIX=../dist
+        -DCMAKE_INSTALL_PREFIX=dist
         -DCPACK_GENERATOR=ZIP
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DSERIOUS_PROTON_DIR="../SeriousProton"
@@ -46,7 +46,8 @@ jobs:
         cmake -E rename EmptyEpsilon.zip emptyepsilon-linux-${{matrix.build_type }}.zip
     - uses: actions/upload-artifact@v2
       with:
-        path: ${{ github.workspace }}/build/emptyepsilon-linux-${{matrix.build_type }}.zip
+        name: emptyepsilon-linux-${{ matrix.build_type }}.zip
+        path: ${{ github.workspace }}/build/EmptyEpsilon.zip
   windows-cross:
     name: Windows (Cross-Compile)
     runs-on: ubuntu-latest
@@ -83,10 +84,10 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: |
           cmake --build . --config ${{ matrix.build_type }} --target package
-           cmake -E rename EmptyEpsilon.zip emptyepsilon-mingw-${{matrix.build_type }}.zip
       - uses: actions/upload-artifact@v2
         with:
-          path: ${{ github.workspace }}/build/emptyepsilon-mingw-${{matrix.build_type }}.zip
+          name: emptyepsilon-win-mingw-${{matrix.build_type }}.zip
+          path: ${{ github.workspace }}/build/EmptyEpsilon.zip
   macos:
     name: MacOS
     runs-on: macos-latest
@@ -158,7 +159,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: |
           cmake --build . --config ${{ matrix.build_type }} --target package
-          cmake -E rename EmptyEpsilon.zip emptyepsilon-win-${{ matrix.arch }}-${{matrix.build_type }}.zip
       - uses: actions/upload-artifact@v2
         with:
-          path: ${{ github.workspace }}/build/emptyepsilon-win-${{ matrix.arch }}-${{matrix.build_type }}.zip
+          name: emptyepsilon-win-${{ matrix.arch }}-${{matrix.build_type }}.zip
+          path: ${{ github.workspace }}/build/EmptyEpsilon.zip

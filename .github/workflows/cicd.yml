@@ -41,9 +41,7 @@ jobs:
         ../EmptyEpsilon
     - name: Build
       working-directory: ${{github.workspace}}/build
-      run: |
-        cmake --build . --config ${{ matrix.build_type }} --target package
-        cmake -E rename EmptyEpsilon.zip emptyepsilon-linux-${{matrix.build_type }}.zip
+      run: cmake --build . --config ${{ matrix.build_type }} --target package
     - uses: actions/upload-artifact@v2
       with:
         name: emptyepsilon-linux-${{ matrix.build_type }}.zip

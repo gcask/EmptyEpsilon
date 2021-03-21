@@ -577,7 +577,7 @@ endif()
 if(APPLE)
 	install(CODE "
   		include(BundleUtilities)
-  		fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app\" \"\" \"${CMAKE_BINARY_DIR}/Frameworks\")
+  		fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app\" \"\" \"${CMAKE_BINARY_DIR}/extlibs;${CMAKE_BINARY_DIR}/Frameworks\")
 	")
 endif()
 include(CPack)

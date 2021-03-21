@@ -1,0 +1,40 @@
+---
+name: macOS Package
+on:
+  push:
+    branches:
+      - macos-package
+  pull_request:
+jobs:
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Dependencies
+        run: |
+          brew install cmake ninja
+          wget https://www.sfml-dev.org/files/SFML-2.5.1-macOS-clang.tar.gz
+          tar xzf SFML-2.5.1-macOS-clang.tar.gz
+      - name: SeriousProton Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: gcask/SeriousProton
+          path: SeriousProton  
+      - name: EmptyEpsilon Checkout
+        uses: actions/checkout@v2
+        with:
+          path: EmptyEpsilon
+      - name: Build
+        run: |
+          mkdir -p build
+          cd build
+          cmake ../EmptyEpsilon -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK_GENERATOR=DragNDrop -DSFML_ROOT=../SFML-2.5.1-macOS-clang -DSERIOUS_PROTON_DIR=../SeriousProton
+          ninja package
+      - name: Upload Package
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: build/EmptyEpsilon.dmg
+          draft: true
+          prerelease: true

@@ -42,8 +42,9 @@ jobs:
         run: cmake --build . --parallel --target EmptyEpsilon --verbose
       - name: Copy SFML
         run: |
-          cp -r SFML-2.5.1-macOS-clang/Frameworks SFML-2.5.1-macOS-clang/extlibs build/
-          ls build
+          cp -r SFML-2.5.1-macOS-clang/Frameworks build/
+          cp -r SFML-2.5.1-macOS-clang/Frameworks/extlibs/ build/Frameworks/
+          ls build/Frameworks/
       - name: Package
         working-directory: ${{github.workspace}}/build
         run: cpack --config CPackConfig.cmake --verbose

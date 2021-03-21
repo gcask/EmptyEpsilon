@@ -1,7 +1,7 @@
 # Set minimum target macOS version
 # Follow whatever SFML is at.
 # Must be first!
-set(MACOSX_DEPLOYMENT_TARGET "10.7")
+set(MACOSX_DEPLOYMENT_TARGET "10.10")
 
 project(EmptyEpsilon)
 cmake_minimum_required(VERSION 2.8.12)
@@ -575,9 +575,10 @@ if(NOT DEFINED CPACK_GENERATOR)
 endif()
 
 if(APPLE)
+	get_filename_component(SFML_ROOT_ABSOLUTE "${SFML_ROOT}" ABSOLUTE)
 	install(CODE "
   		include(BundleUtilities)
-  		fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app\" \"\" \"${SFML_ROOT}\")
+  		fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app\" \"\" \"${SFML_ROOT_ABSOLUTE}\")
 	")
 endif()
 include(CPack)

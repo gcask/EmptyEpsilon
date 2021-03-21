@@ -1,3 +1,8 @@
+# Set minimum target macOS version
+# Follow whatever SFML is at.
+# Must be first!
+set(MACOSX_DEPLOYMENT_TARGET "10.7")
+
 project(EmptyEpsilon)
 cmake_minimum_required(VERSION 2.8.12)
 
@@ -65,10 +70,6 @@ if(UNIX)
     # Set RESOURCE_BASE_DIR on Unix so the built binary is able to find resources
     add_definitions(-DRESOURCE_BASE_DIR="${CMAKE_INSTALL_PREFIX}/share/emptyepsilon/")
 endif()
-
-# Set minimum target macOS version
-# Follow whatever SFML is at.
-set(MACOSX_DEPLOYMENT_TARGET "10.7")
 
 if(CONFIG_DIR)
     add_definitions(-DCONFIG_DIR="${CONFIG_DIR}")

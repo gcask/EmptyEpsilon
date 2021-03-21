@@ -32,7 +32,7 @@ jobs:
           cmake ../EmptyEpsilon
           -G Ninja
           -DCMAKE_BUILD_TYPE=RelWithDebInfo
-          -DSFML_ROOT=../SFML-2.5.1-macOS-clang
+          -DSFML_ROOT=../SFML-2.5.1-macOS-clang/Frameworks
           -DSERIOUS_PROTON_DIR=../SeriousProton
           -DCPACK_GENERATOR=DragNDrop
       - name: Build

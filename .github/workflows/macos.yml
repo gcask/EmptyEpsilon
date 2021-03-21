@@ -39,7 +39,7 @@ jobs:
           -DCPACK_GENERATOR=DragNDrop
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --target EmptyEpsilon --verbose
+        run: cmake --build . --parallel --target EmptyEpsilon --verbose
       - name: Copy SFML
         run: |
           cp -r SFML-2.5.1-macOS-clang/Frameworks SFML-2.5.1-macOS-clang/extlibs build/

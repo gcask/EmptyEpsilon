@@ -31,6 +31,7 @@ jobs:
           cmake ../EmptyEpsilon -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK_GENERATOR=DragNDrop -DSFML_ROOT=../SFML-2.5.1-macOS-clang -DSERIOUS_PROTON_DIR=../SeriousProton
           ninja package
       - name: Upload Package
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

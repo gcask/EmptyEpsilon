@@ -577,7 +577,7 @@ endif()
 if(APPLE)
 	install(CODE [[
   		include(BundleUtilities)
-  		fixup_bundle("${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app" "" "")
+  		fixup_bundle("${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app" "" "${SFML_ROOT}")
 	]])
 endif()
 include(CPack)

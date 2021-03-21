@@ -42,7 +42,7 @@ jobs:
         run: cmake --build . --target EmptyEpsilon --verbose
       - name: Copy SFML
         run: |
-          cp -r SFML-2.5.1-macOS-clang/Frameworks/ SFML-2.5.1-macOS-clang/extlibs/ build/
+          cp -r SFML-2.5.1-macOS-clang/Frameworks SFML-2.5.1-macOS-clang/extlibs build/
           ls build
       - name: Package
         working-directory: ${{github.workspace}}/build

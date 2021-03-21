@@ -43,7 +43,7 @@ jobs:
       - name: Copy SFML
         run: |
           cp -r SFML-2.5.1-macOS-clang/Frameworks build/
-          cp -r SFML-2.5.1-macOS-clang/Frameworks/extlibs/ build/Frameworks/
+          cp -r SFML-2.5.1-macOS-clang/extlibs/ build/Frameworks/
           ls build/Frameworks/
       - name: Package
         working-directory: ${{github.workspace}}/build

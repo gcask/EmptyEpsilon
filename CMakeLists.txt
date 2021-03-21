@@ -1,7 +1,7 @@
 # Set minimum target macOS version
 # Follow whatever SFML is at.
 # Must be first!
-set(MACOSX_DEPLOYMENT_TARGET "10.7")
+set(MACOSX_DEPLOYMENT_TARGET "10.9")
 
 project(EmptyEpsilon)
 cmake_minimum_required(VERSION 2.8.12)

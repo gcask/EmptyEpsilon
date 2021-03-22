@@ -43,7 +43,7 @@ jobs:
           echo "package_extension=zip" >> $Env:GITHUB_ENV
           echo "cmake_generator=Visual Studio 16 2019" >> $Env:GITHUB_ENV
           echo "cpack_generator=ZIP" >> $Env:GITHUB_ENV
-          echo "cmake_platform_args=-A Win32 -DSFML_ROOT=\"../externals/SFML-2.5.1\"" >> $Env:GITHUB_ENV
+          echo "cmake_platform_args=-A Win32 -DSFML_ROOT=\\"../externals/SFML-2.5.1\\"" >> $Env:GITHUB_ENV
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:

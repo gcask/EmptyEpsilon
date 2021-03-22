@@ -1,0 +1,96 @@
+---
+name: macOS Package
+on:
+  push:
+    branches:
+      - macos-package
+jobs:
+  package:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Package ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: 10.9
+    steps:
+      - name: macOS Setup
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake ninja
+          curl -sSL https://www.sfml-dev.org/files/SFML-2.5.1-macOS-clang.tar.gz | tar xzf -
+          echo "package_extension=dmg" >> $GITHUB_ENV
+      - name: Linux Setup
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install libsfml-dev
+          echo "package_extension=deb" >> $GITHUB_ENV
+      - name: Windows Dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+          $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-32-bit.zip”
+          $sfml_zip = "${{github.workspace}}/sfml-dev.zip"
+          (new-object System.Net.WebClient).DownloadFile($sfml_link, $sfml_zip)
+          Expand-Archive -LiteralPath $sfml_zip -DestinationPath "${{github.workspace}}/externals"
+          echo "package_extension=zip" >> $GITHUB_ENV
+      - name: SeriousProton Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: daid/SeriousProton
+          path: SeriousProton
+          ref: EE-2021.03.16
+      - name: EmptyEpsilon Checkout
+        uses: actions/checkout@v2
+        with:
+          path: EmptyEpsilon
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+      - name: macOS Configure CMake
+        if: matrix.os == 'macos-latest'
+        working-directory: ${{github.workspace}}/build
+        run: >
+          cmake ../EmptyEpsilon
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DSFML_ROOT=../SFML-2.5.1-macos-clang/Frameworks
+          -DSERIOUS_PROTON_DIR=../SeriousProton
+          -DCPACK_GENERATOR=DragNDrop
+      - name: Linux configure CMake
+        if: matrix.os == 'ubuntu-latest'
+        working-directory: ${{github.workspace}}/build
+        run: >
+          cmake ../EmptyEpsilon
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DSERIOUS_PROTON_DIR=../SeriousProton
+          -DCPACK_GENERATOR=DEB
+      - name: Windows configure CMake
+        if: matrix.os == 'windows-latest'
+        working-directory: ${{github.workspace}}/build
+        run: >
+          cmake ../EmptyEpsilon
+          -G "Visual Studio 16 2019" -A Win32
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DSFML_ROOT="../externals/SFML-2.5.1"
+          -DSERIOUS_PROTON_DIR="../SeriousProton"
+          -DCPACK_GENERATOR=DEB
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --parallel --target EmptyEpsilon --verbose
+      - name: macOS Copy SFML
+        if: matrix.os == 'macos-latest'
+        run: |
+          cp -r SFML-2.5.1-macos-clang/Frameworks build/
+          cp -r SFML-2.5.1-macos-clang/extlibs/ build/Frameworks/
+      - name: Package
+        working-directory: ${{github.workspace}}/build
+        run: cpack --config CPackConfig.cmake --verbose
+      - name: macOS Upload Package
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: build/EmptyEpsilon.${{ env.package_extension }}
+          draft: true
+          prerelease: true

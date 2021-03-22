@@ -28,22 +28,22 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update -qq
-          sudo apt-get install ninja-build libsfml-dev
+          sudo apt-get install -qq ninja-build libsfml-dev
           echo "package_extension=deb" >> $GITHUB_ENV
           echo "cmake_generator=Ninja" >> $GITHUB_ENV
           echo "cpack_generator=DEB" >> $GITHUB_ENV
           echo "cmake_platform_args=" >> $GITHUB_ENV
-      - name: Windows Dependencies
+      - name: Windows Setup
         if: matrix.os == 'windows-latest'
         run: |
           $sfml_link = “https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-32-bit.zip”
           $sfml_zip = "${{github.workspace}}/sfml-dev.zip"
           (new-object System.Net.WebClient).DownloadFile($sfml_link, $sfml_zip)
           Expand-Archive -LiteralPath $sfml_zip -DestinationPath "${{github.workspace}}/externals"
-          echo "package_extension=zip" >> $GITHUB_ENV
-          echo "cmake_generator=Visual Studio 16 2019" >> $GITHUB_ENV
-          echo "cpack_generator=ZIP" >> $GITHUB_ENV
-          echo "cmake_platform_args=-A Win32 -DSFML_ROOT=../externals/SFML-2.5.1" >> $GITHUB_ENV
+          echo "package_extension=zip" >> $Env:GITHUB_ENV
+          echo "cmake_generator=Visual Studio 16 2019" >> $Env:GITHUB_ENV
+          echo "cpack_generator=ZIP" >> $Env:GITHUB_ENV
+          echo "cmake_platform_args=-A Win32 -DSFML_ROOT=../externals/SFML-2.5.1" >> $Env:GITHUB_ENV
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:

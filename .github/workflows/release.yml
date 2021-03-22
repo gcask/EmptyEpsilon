@@ -21,7 +21,7 @@ jobs:
           echo "cpack_package_version_patch=$(echo ${GITHUB_REF#refs/*/} | cut -d. -f3)" >> $GITHUB_ENV
       - name: Auto CPack
         shell: bash
-        if: ${{ !startsWith(github.ref, 'refs/tags/')) }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
           echo "cpack_package_version_major=$(date +'%Y')" >> $GITHUB_ENV
           echo "cpack_package_version_minor=$(date +'%m')" >> $GITHUB_ENV

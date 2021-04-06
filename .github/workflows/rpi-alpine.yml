@@ -34,6 +34,9 @@ jobs:
         apk add clang lld git cmake ninja llvm wget unzip
     - name: EmptyEpsilon Checkout
       uses: actions/checkout@v2
+      with:
+        path: EmptyEpsilon
+        submodules: true
 
     ####### SFML ##############
     - name: SFML - Get Sources

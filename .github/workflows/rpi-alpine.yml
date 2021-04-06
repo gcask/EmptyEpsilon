@@ -53,19 +53,17 @@ jobs:
         -DSFML_BUILD_DOC:BOOL=OFF
         -DSFML_BUILD_GRAPHICS:BOOL=OFF
         -DSFML_BUILD_WINDOW:BOOL=OFF
-        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
-        -S ../SFML-2.5.1 -B sfml-build
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=EmptyEpsilon/cmake/rpi2b-alpine.toolchain
+        -S SFML-2.5.1 -B sfml-build
     - name: SFML - Install
       run: cmake --build sfml-build --parallel --target install
     - name: SFML - Fix up
-      working-directory: /sysroot/opt/sfml/include
-      run: rm -rf Window Graphics GpuPreference.hpp Graphics.hpp OpenGL.hpp Window.hpp
+      run: |
+        cd /sysroot/opt/sfml/include
+        rm -rf Window Graphics GpuPreference.hpp Graphics.hpp OpenGL.hpp Window.hpp
     
     ###### EmptyEpsilon ##########
-    - name: Create Build Environment
-      run: cmake -E make_directory ${{github.workspace}}/build
     - name: Configure CMake
-      working-directory: ${{github.workspace}}/build
       run: >
         cmake
         -G Ninja
@@ -73,11 +71,10 @@ jobs:
         -DCMAKE_INSTALL_PREFIX:STRING=dist
         -DCPACK_GENERATOR:STRING=ZIP
         -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
-        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
-        ../EmptyEpsilon
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=EmptyEpsilon/cmake/rpi2b-alpine.toolchain
+        -S EmptyEpsilon -B ee-build
     - name: Build
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build . --parallel --target package
+      run: cmake --build ee-build --parallel --target package
     - uses: actions/upload-artifact@v2
       with:
         name: emptyepsilon-alpine.zip

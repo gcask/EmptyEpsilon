@@ -59,7 +59,7 @@ jobs:
       run: cmake --build sfml-build --parallel --target install
     - name: SFML - Fix up
       run: |
-        cd /sysroot/opt/sfml/include
+        cd /sysroot/opt/sfml/include/SFML
         rm -rf Window Graphics GpuPreference.hpp Graphics.hpp OpenGL.hpp Window.hpp
     
     ###### EmptyEpsilon ##########

@@ -10,7 +10,7 @@ jobs:
   rpi2b:
     name: Alpine RPi2
     runs-on: ubuntu-latest
-    container: alpine:3.10
+    container: alpine:3.13
     steps:
     #### Setup #######
     - name: Sysroot setup
@@ -19,7 +19,9 @@ jobs:
         apk --root /sysroot --initdb --arch armv7 add
         cp /etc/apk/repositories /sysroot/etc/apk
         apk --root /sysroot --allow-untrusted add alpine-keys
-        apk --root /sysroot add build-base mesa-dev sdl2-dev eudev-dev \
+    - name: Sysroot packages
+      run: >
+        apk --root /sysroot add build-base mesa-dev sdl2-dev eudev-dev
         freetype-dev flac-dev libogg-dev libvorbis-dev openal-soft-dev
     - name: Host setup
       run: |

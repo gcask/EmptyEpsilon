@@ -70,11 +70,11 @@ jobs:
         -DSFML_ROOT:PATH=/opt/sfml
         -DCMAKE_INSTALL_PREFIX:STRING=dist
         -DCPACK_GENERATOR:STRING=ZIP
-        -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
+        -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
         -S EmptyEpsilon -B ee-build
     - name: Build
-      run: cmake --build ee-build --parallel --target package
+      run: cmake --build ee-build --parallel --target EmptyEpsilon
     - uses: actions/upload-artifact@v2
       with:
         name: emptyepsilon-alpine.zip

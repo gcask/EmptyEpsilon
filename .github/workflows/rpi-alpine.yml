@@ -19,7 +19,7 @@ jobs:
         apk --root /sysroot --initdb --arch armv7 add
         cp /etc/apk/repositories /sysroot/etc/apk
         apk --root /sysroot --allow-untrusted add alpine-keys
-        apk --root add add build-base mesa-dev sdl2-dev eudev-dev \
+        apk --root /sysroot add add build-base mesa-dev sdl2-dev eudev-dev \
         freetype-dev flac-dev libogg-dev libvorbis-dev openal-soft-dev
     - name: Host setup
       run: |

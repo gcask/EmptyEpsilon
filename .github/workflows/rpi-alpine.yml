@@ -53,7 +53,7 @@ jobs:
         -DSFML_BUILD_DOC:BOOL=OFF
         -DSFML_BUILD_GRAPHICS:BOOL=OFF
         -DSFML_BUILD_WINDOW:BOOL=OFF
-        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=EmptyEpsilon/cmake/rpi2b-alpine.toolchain
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
         -S SFML-2.5.1 -B sfml-build
     - name: SFML - Install
       run: cmake --build sfml-build --parallel --target install

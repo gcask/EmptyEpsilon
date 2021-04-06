@@ -23,6 +23,7 @@ jobs:
     - name: Sysroot build base
       run: apk --root /sysroot add build-base
     - name: Sysroot eudev
+      if: ${{ false }}
       run: apk --root /sysroot add eudev-dev
     - name: Sysroot packages
       run: >

@@ -43,10 +43,7 @@ jobs:
       run: |
         wget https://www.sfml-dev.org/files/SFML-2.5.1-sources.zip
         unzip SFML-2.5.1-sources.zip
-    - name: SFML - Create Build Environment
-      run: cmake -E make_directory ${{github.workspace}}/sfml-build
     - name: SFML - Configure
-      working-directory: ${{github.workspace}}/sfml-build
       run: >
         cmake -G Ninja
         -DCMAKE_BUILD_TYPE:STRING=Release
@@ -57,10 +54,9 @@ jobs:
         -DSFML_BUILD_GRAPHICS:BOOL=OFF
         -DSFML_BUILD_WINDOW:BOOL=OFF
         -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
-        ../SFML-2.5.1
+        -S ../SFML-2.5.1 -B sfml-build
     - name: SFML - Install
-      working-directory: ${{github.workspace}}/sfml-build
-      run: cmake --build . --parallel --target install
+      run: cmake --build sfml-build --parallel --target install
     - name: SFML - Fix up
       working-directory: /sysroot/opt/sfml/include
       run: rm -rf Window Graphics GpuPreference.hpp Graphics.hpp OpenGL.hpp Window.hpp

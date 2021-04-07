@@ -391,4 +391,9 @@ if(NOT DEFINED CPACK_GENERATOR)
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml")
   endif()
 endif()
+
+install(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"\${CMAKE_INSTALL_BINDIR}/EmptyEpsilon\" \"\" \"${CMAKE_BINARY_DIR};${SFML_ROOT}/lib\")
+")
 include(CPack)

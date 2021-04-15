@@ -67,9 +67,10 @@ jobs:
       run: >
         cmake
         -G Ninja
+        -DCOMPRESS_TEXTURES:STRING=astc
         -DSFML_ROOT:PATH=/opt/sfml
         -DCMAKE_INSTALL_PREFIX:STRING=dist
-        -DCPACK_GENERATOR:STRING=ZIP
+        -DCPACK_GENERATOR:STRING=TGZ
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../EmptyEpsilon/cmake/rpi2b-alpine.toolchain
         -S EmptyEpsilon -B ee-build
@@ -77,5 +78,5 @@ jobs:
       run: cmake --build ee-build --parallel --target package
     - uses: actions/upload-artifact@v2
       with:
-        name: emptyepsilon-alpine.zip
-        path: ${{ github.workspace }}/ee-build/EmptyEpsilon.zip
+        name: emptyepsilon-alpine.tar.gz
+        path: ${{ github.workspace }}/ee-build/EmptyEpsilon.tar.gz

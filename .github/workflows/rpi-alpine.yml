@@ -31,7 +31,7 @@ jobs:
         freetype-dev flac-dev libogg-dev libvorbis-dev openal-soft-dev
     - name: Host setup
       run: |
-        apk add clang lld git cmake ninja llvm wget unzip
+        apk add clang lld git cmake ninja llvm wget unzip build-base
     - name: EmptyEpsilon Checkout
       uses: actions/checkout@v2
       with:
